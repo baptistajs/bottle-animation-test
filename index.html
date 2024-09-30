@@ -1,26 +1,42 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta http-equiv="Cross-Origin-Embedder-Policy" content="require-corp"> 
-  <title>Bottle AR Experience</title>
-  <!-- Include A-Frame and AR.js libraries -->
+  <title>AR 3D Object</title>
+  
+  <!-- Include A-Frame and AR.js -->
   <script src="https://aframe.io/releases/1.2.0/aframe.min.js"></script>
   <script src="https://cdn.jsdelivr.net/gh/AR-js-org/AR.js/aframe/build/aframe-ar.js"></script>
 </head>
 
-<body style="margin: 0px; overflow: hidden;">
+<body style="margin: 0; overflow: hidden;">
+  <!-- A-Frame Scene -->
   <a-scene embedded arjs="sourceType: webcam; debugUIEnabled: false;">
-    <!-- Marker to detect the image -->
-    <a-marker preset="custom" type="pattern" url="https://baptistajs.github.io/bottle-animation-test/pattern-garrafa.patt"> 
-      <!-- Load your 3D model -->
-      <a-entity gltf-model="url(https://baptistajs.github.io/bottle-animation-test/garrafa-uncompressed.glb)" 
-                scale="0.1 0.1 0.1" position="0 0 0" animation-mixer></a-entity>
-    </a-marker>
+    
+    <!-- AR Marker (custom marker using a .patt file) -->
+    <a-marker preset="custom" type="pattern" url="https://baptistajs.com/bottle-animation-test/pattern-garrafa.patt">
+      
+      <!-- 3D model with animation -->
+      <a-entity id="garrafa-uncompressed" 
+                gltf-model="url(https://baptistajs.com/bottle-animation-test/garrafa-uncompressed.glb)" 
+                scale="0.5 0.5 0.5" 
+                position="0 0 0">
+      </a-entity>
 
-    <!-- Camera entity -->
+    </a-marker>
+    
+    <!-- Camera -->
     <a-entity camera></a-entity>
   </a-scene>
+
+  <script>
+    // Add event listener to trigger animation when the object is clicked/touched
+    document.querySelector('#garrafa-uncompressed').addEventListener('click', function () {
+      var object = document.querySelector('#garrafa-uncompressed');
+      console.log("Object clicked, triggering animation.");
+      object.setAttribute('animation-mixer', '');  // Trigger the animation from the glTF model
+    });
+  </script>
 </body>
 </html>
