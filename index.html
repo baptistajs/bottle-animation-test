@@ -12,10 +12,27 @@
           position="0 0 0" 
           rotation="0 90 0" 
           scale="50 50 50"
-          animation-mixer="clip: Animation; loop: repeat"> 
+          animation-mixer="clip: Animation; loop: repeat; startEvents: animation-start" 
+          id="bottle">
+          <a-entity id="garrafa" class="clickable" geometry="primitive: box; width: 0.5; height: 1; depth: 0.5" material="color: red; opacity: 0.5" position="0 0.5 0"></a-entity> 
         </a-entity>
       </a-marker>
       <a-entity camera></a-entity>
     </a-scene>
+    <script>
+      // Get references to the bottle and garrafa entities
+      const bottle = document.getElementById('bottle');
+      const garrafa = document.getElementById('garrafa');
+
+      // Add a click listener to the garrafa entity
+      garrafa.addEventListener('click', () => {
+        // Toggle the animation
+        if (bottle.components['animation-mixer'].isPlaying) {
+          bottle.components['animation-mixer'].pause();
+        } else {
+          bottle.emit('animation-start'); // Trigger the animation
+        }
+      });
+    </script>
   </body>
 </html>
