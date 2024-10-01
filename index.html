@@ -24,6 +24,10 @@
       const bottle = document.getElementById('bottle');
       const garrafa = document.getElementById('garrafa');
 
+      // Initially pause the animation
+      bottle.components['animation-mixer'].pause();
+
+      // Add a click listener to the garrafa entity
       garrafa.addEventListener('click', () => {
         // Toggle the animation
         if (bottle.components['animation-mixer'].isPlaying) {
