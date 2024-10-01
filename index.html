@@ -14,30 +14,27 @@
           scale="50 50 50"
           animation-mixer="clip: Animation; loop: repeat; startEvents: animation-start" 
           id="bottle">
-          <a-entity id="garrafa" class="clickable" geometry="primitive: box; width: 100; height: 100; depth: 100" material="color: red; opacity: 0.5" position="0 0 0"></a-entity> 
         </a-entity>
       </a-marker>
       <a-entity camera></a-entity>
     </a-scene>
     <script>
-      // Get references to the bottle and garrafa entities
+      // Get a reference to the bottle entity
       const bottle = document.getElementById('bottle');
-      const garrafa = document.getElementById('garrafa');
 
-      // Initially pause the animation
+      // Pause the animation after the model loads
       bottle.addEventListener('model-loaded', () => {
         bottle.components['animation-mixer'].pause(); 
-      });
 
-
-      // Add a click listener to the garrafa entity
-      garrafa.addEventListener('click', () => {
-        // Toggle the animation
-        if (bottle.components['animation-mixer'].isPlaying) {
-          bottle.components['animation-mixer'].pause();
-        } else {
-          bottle.emit('animation-start'); // Trigger the animation
-        }
+        // Add a click listener to the entire bottle model
+        bottle.addEventListener('click', () => {
+          // Toggle the animation
+          if (bottle.components['animation-mixer'].isPlaying) {
+            bottle.components['animation-mixer'].pause();
+          } else {
+            bottle.emit('animation-start'); // Trigger the animation
+          }
+        });
       });
     </script>
   </body>
