@@ -6,11 +6,11 @@
 </head>
 <body>
   <a-scene embedded arjs="patternRatio:0.80">
-    <!-- Include cursor for handling clicks in AR -->
+    <!-- Include cursor for handling clicks in AR, but make it invisible -->
     <a-entity camera>
-      <a-cursor></a-cursor>
+      <a-cursor material="color: transparent; opacity: 0;"></a-cursor>
     </a-entity>
-    
+
     <!-- Marker Detection -->
     <a-marker type="pattern" url="qrcode.patt">
       <!-- 3D model with animation-mixer component -->
@@ -25,11 +25,19 @@
   </a-scene>
 
   <script>
-    // Use raycasting to detect click events on the model
+    // Event listener to toggle the animation on click
     document.querySelector('#animated-object').addEventListener('click', function () {
-      console.log('Object clicked, starting animation...');
       var entity = document.querySelector('#animated-object');
-      entity.setAttribute('animation-mixer', 'clip: Animation; loop: false; clampWhenFinished: true');
+      var mixer = entity.components['animation-mixer'];
+      
+      // Toggle animation play/pause based on current state
+      if (mixer.mixer.time === 0 || mixer.mixer.paused) {
+        console.log('Starting animation...');
+        entity.setAttribute('animation-mixer', 'clip: Animation; loop: false; clampWhenFinished: true');
+      } else {
+        console.log('Stopping animation...');
+        mixer.mixer.stopAllAction();  // Stops the animation
+      }
     });
   </script>
 </body>
