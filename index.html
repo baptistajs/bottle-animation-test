@@ -1,3 +1,4 @@
+<!DOCTYPE html>
 <html>
 <head>
   <script src="https://aframe.io/releases/1.6.0/aframe.min.js"></script>
@@ -53,9 +54,9 @@
       <a-entity
         gltf-model="url(https://baptistajs.github.io/bottle-animation-test/bottle-animation-new.glb)"
         position="0 0 0"
-        rotation="0 0 0"
         scale="50 50 50"
-        animation-mixer="clip: Animation; loop: repeat">
+        animation-mixer="clip: Animation; loop: repeat; startEvents: animation-start" 
+        id="bottleModel">
       </a-entity>
     </a-marker>
     <a-entity camera></a-entity>
@@ -65,6 +66,29 @@
     // Function to hide the popup when "OK" is clicked
     document.getElementById('closePopup').addEventListener('click', function () {
       document.getElementById('popup').classList.add('hidden');
+    });
+
+    const bottleModel = document.getElementById('bottleModel');
+
+    bottleModel.addEventListener('model-loaded', () => {
+      // Get the camera's world rotation
+      const cameraRotation = document.querySelector('[camera]').object3D.getWorldQuaternion(); 
+
+      // Apply the inverse of the camera's rotation to the bottle
+      bottleModel.object3D.quaternion.copy(cameraRotation.clone().invert()); 
+
+      // Pause the animation after the model loads
+      bottleModel.components['animation-mixer'].pause(); 
+
+      // Add a click listener to the entire bottle model
+      bottleModel.addEventListener('click', () => {
+        // Toggle the animation
+        if (bottleModel.components['animation-mixer'].isPlaying) {
+          bottleModel.components['animation-mixer'].pause();
+        } else {
+          bottleModel.emit('animation-start'); // Trigger the animation
+        }
+      });
     });
   </script>
 </body>
