@@ -6,28 +6,30 @@
 </head>
 <body>
   <a-scene embedded arjs="patternRatio:0.80">
+    <!-- Include cursor for handling clicks in AR -->
+    <a-entity camera>
+      <a-cursor></a-cursor>
+    </a-entity>
+    
+    <!-- Marker Detection -->
     <a-marker type="pattern" url="qrcode.patt">
-      <!-- 3D model without the animation-mixer triggered by default -->
+      <!-- 3D model with animation-mixer component -->
       <a-entity id="animated-object"
                 gltf-model="url(https://baptistajs.github.io/bottle-animation-test/bottle-animation-new.glb)"
                 position="0 0 0"
                 rotation="0 90 0"
-                scale="50 50 50">
+                scale="50 50 50"
+                animation-mixer="clip: Animation; loop: false; clampWhenFinished: true">
       </a-entity>
     </a-marker>
-    <a-entity camera></a-entity>
   </a-scene>
 
   <script>
-    // Wait for the model to be loaded
-    document.querySelector('#animated-object').addEventListener('model-loaded', function () {
-      console.log('Model loaded successfully!');
-
-      // Add event listener to trigger animation on click/tap
-      document.querySelector('#animated-object').addEventListener('click', function () {
-        console.log('Object clicked, starting animation...');
-        this.setAttribute('animation-mixer', 'clip: Animation; loop: once; clampWhenFinished: true');
-      });
+    // Use raycasting to detect click events on the model
+    document.querySelector('#animated-object').addEventListener('click', function () {
+      console.log('Object clicked, starting animation...');
+      var entity = document.querySelector('#animated-object');
+      entity.setAttribute('animation-mixer', 'clip: Animation; loop: false; clampWhenFinished: true');
     });
   </script>
 </body>
