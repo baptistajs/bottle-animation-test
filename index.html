@@ -6,11 +6,6 @@
 </head>
 <body>
   <a-scene embedded arjs="patternRatio:0.80">
-    <!-- Include cursor for handling clicks in AR, but make it invisible -->
-    <a-entity camera>
-      <a-cursor material="color: transparent; opacity: 0;"></a-cursor>
-    </a-entity>
-
     <!-- Marker Detection -->
     <a-marker type="pattern" url="qrcode.patt">
       <!-- 3D model with animation-mixer component -->
@@ -22,21 +17,41 @@
                 animation-mixer="clip: Animation; loop: false; clampWhenFinished: true">
       </a-entity>
     </a-marker>
+
+    <!-- Raycaster will cast rays from the screen -->
+    <a-entity camera position="0 0 0"></a-entity>
   </a-scene>
 
   <script>
-    // Event listener to toggle the animation on click
-    document.querySelector('#animated-object').addEventListener('click', function () {
-      var entity = document.querySelector('#animated-object');
-      var mixer = entity.components['animation-mixer'];
-      
-      // Toggle animation play/pause based on current state
-      if (mixer.mixer.time === 0 || mixer.mixer.paused) {
-        console.log('Starting animation...');
-        entity.setAttribute('animation-mixer', 'clip: Animation; loop: false; clampWhenFinished: true');
-      } else {
-        console.log('Stopping animation...');
-        mixer.mixer.stopAllAction();  // Stops the animation
+    // Add a click/touch event listener to the whole scene
+    document.querySelector('a-scene').addEventListener('click', function (evt) {
+      var scene = this;
+      var animatedObject = document.querySelector('#animated-object');
+
+      // Create a raycaster and set its origin from the camera
+      var camera = scene.querySelector('a-entity[camera]');
+      var raycaster = new THREE.Raycaster();
+      var mouse = new THREE.Vector2();
+
+      // Get the position of the click/tap on the screen
+      mouse.x = (evt.clientX / window.innerWidth) * 2 - 1;
+      mouse.y = - (evt.clientY / window.innerHeight) * 2 + 1;
+
+      // Update the raycaster based on the camera's position and the screen tap
+      raycaster.setFromCamera(mouse, camera.components.camera.camera);
+
+      // Get the 3D object for raycasting
+      var intersectedObjects = raycaster.intersectObject(animatedObject.object3D, true);
+
+      // Check if the ray hit the model
+      if (intersectedObjects.length > 0) {
+        console.log('Object clicked, starting animation...');
+        var mixer = animatedObject.components['animation-mixer'];
+        
+        // Play the animation if it's not running
+        if (!mixer.mixer._actions[0].isRunning()) {
+          mixer.mixer._actions[0].play();
+        }
       }
     });
   </script>
