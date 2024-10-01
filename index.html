@@ -5,11 +5,28 @@
   </head>
   <body>
     <a-scene embedded arjs="patternRatio:0.80">
+      <!-- Marker Detection -->
       <a-marker type="pattern" url="qrcode.patt">
-      <a-box position="0 0 0" rotation="0 45 0" color="#4CC3D9"></a-box>
-      <a-entity gltf-model="url(https://baptistajs.github.io/bottle-animation-test/garrafa-uncompressed.glb)" position="0 0 0" rotation="0 0 0" scale="50 50 50"></a-entity>
-        </a-marker>
+        <!-- 3D model with animation-mixer component to handle animations -->
+        <a-entity id="animated-object"
+                  gltf-model="url(https://baptistajs.github.io/bottle-animation-test/garrafa-uncompressed.glb)" 
+                  position="0 0 0" rotation="0 0 0" scale="50 50 50"
+                  animation-mixer>
+        </a-entity>
+      </a-marker>
+
+      <!-- Camera -->
       <a-entity camera></a-entity>
     </a-scene>
+
+    <script>
+      // Add an event listener to the entity to play the animation on tap
+      document.querySelector('#animated-object').addEventListener('click', function () {
+        var entity = document.querySelector('#animated-object');
+        console.log('Object clicked, animation playing...');
+        // The animation-mixer component will automatically play the first animation
+        entity.setAttribute('animation-mixer', '');  // Triggers animation
+      });
+    </script>
   </body>
 </html>
