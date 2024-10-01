@@ -11,7 +11,7 @@
         <a-entity id="animated-object"
                   gltf-model="url(https://baptistajs.github.io/bottle-animation-test/garrafa-uncompressed.glb)" 
                   position="0 0 0" rotation="0 0 0" scale="50 50 50"
-                  animation-mixer="clip: *; loop: once; timeScale: 1">
+                  animation-mixer="clip: *; loop: once; clampWhenFinished: true">
         </a-entity>
       </a-marker>
 
@@ -20,11 +20,11 @@
     </a-scene>
 
     <script>
-      // Add an event listener to play the animation on tap/click
-      document.querySelector('#animated-object').addEventListener('click', function () {
+      // Add an event listener to ensure the animation starts when the model is loaded
+      document.querySelector('#animated-object').addEventListener('model-loaded', function () {
+        console.log('Model loaded, animation started');
         var entity = document.querySelector('#animated-object');
-        console.log('Object clicked, toggling animation...');
-        entity.components['animation-mixer'].play();
+        entity.setAttribute('animation-mixer', 'clip: animationName; loop: once; clampWhenFinished: true');
       });
     </script>
   </body>
