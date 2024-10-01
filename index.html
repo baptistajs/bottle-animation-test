@@ -10,18 +10,40 @@
         <a-entity 
           gltf-model="url(https://baptistajs.github.io/bottle-animation-test/bottle-animation.glb)" 
           position="0 0 0" 
-          rotation="0 90 0" 
+          rotation="0 0 0" 
           scale="50 50 50"
-          animation-mixer="clip: laranja-action-01; loop: repeat"
-          animation__2="clip: laranja-action-02; loop: repeat"
-          animation__3="clip: folha-action-01; loop: repeat"
-          animation__4="clip: folha-action-02; loop: repeat"
-          animation__5="clip: folha-action-03; loop: repeat"
-          animation__6="clip: folha-action-04; loop: repeat"
-          animation__7="clip: folha-action-05; loop: repeat">
+          id="bottle"
+          animation-mixer="clip: laranja-action-01; loop: repeat; startEvents: model-loaded, animation-finished">
         </a-entity>
       </a-marker>
       <a-entity camera></a-entity>
     </a-scene>
+    <script>
+      const bottle = document.getElementById('bottle');
+
+      bottle.addEventListener('model-loaded', () => {
+        bottle.components['animation-mixer'].data.clip = 'laranja-action-02';
+        bottle.emit('animation-finished'); // Trigger the next animation immediately
+      });
+
+      bottle.addEventListener('animation-finished', () => {
+        const currentClip = bottle.components['animation-mixer'].data.clip;
+        let nextClip;
+
+        switch (currentClip) {
+          case 'laranja-action-02':
+            nextClip = 'folha-action-01';
+            break;
+          case 'folha-action-01':
+            nextClip = 'folha-action-02';
+            break;
+          // ... (add cases for other animations)
+          default:
+            nextClip = 'laranja-action-01'; // Loop back to the beginning
+        }
+
+        bottle.components['animation-mixer'].data.clip = nextClip;
+      });
+    </script>
   </body>
 </html>
