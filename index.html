@@ -54,8 +54,8 @@
       <a-entity
         gltf-model="url(https://baptistajs.github.io/bottle-animation-test/bottle-animation-new.glb)"
         position="0 0 0"
-        scale="75 75 75"
-        animation-mixer="clip: Animation; loop: repeat; startEvents: animation-start" 
+        scale="50 50 50"
+        animation-mixer="clip: Animation; loop: repeat" 
         id="bottleModel">
       </a-entity>
     </a-marker>
@@ -76,19 +76,6 @@
 
       // Apply the inverse of the camera's rotation to the bottle
       bottleModel.object3D.quaternion.copy(cameraRotation.clone().invert()); 
-
-      // Pause the animation after the model loads
-      bottleModel.components['animation-mixer'].pause(); 
-
-      // Add a click listener to the entire bottle model
-      bottleModel.addEventListener('click', () => {
-        // Toggle the animation
-        if (bottleModel.components['animation-mixer'].isPlaying) {
-          bottleModel.components['animation-mixer'].pause();
-        } else {
-          bottleModel.emit('animation-start'); // Trigger the animation
-        }
-      });
     });
   </script>
 </body>
